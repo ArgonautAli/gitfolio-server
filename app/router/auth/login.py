@@ -1,11 +1,15 @@
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import RedirectResponse
 from fastapi import APIRouter, Query, Request
+from database import db_dependency, db
+from classes import UserBase
 from urllib.parse import urlencode
 from dotenv import load_dotenv
 from httpx import AsyncClient
 import requests
 import os
+from uuid import uuid4
+
 
 load_dotenv()
 
@@ -54,5 +58,10 @@ async def auth_callback(req: Request):
             headers = {"Authorization": f"Bearer {access_token}"}
         )
         user_info = userinfo_response.json()
+        user_id = uuid4
+        print("user_info",user_info)
+        # user: UserBase = {"id": user_id, "sso_id": user_info.id, "email": user.email, "name": user.name, "picture": user.picture, "sso_type": "google"}
+        # db.add(user)
+        # db.commit()
     # return user_info.json()
     return {"user_info": user_info}
